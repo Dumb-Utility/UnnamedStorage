@@ -55,9 +55,9 @@ function lib:Create(Data: table)
     -- ESP Skeleton
     local Trace, Text = Drawing.new("Line"), nil
     if DText then Text = Drawing.new("Text") end
-    Trace.Color     = Color
     if type(Color) ~= "string" then
-    Text.Color      = Color
+       Trace.Color     = Color
+       Text.Color      = Color
     end
     Text.Text       = Part.Name
     Trace.Visible   = true
@@ -79,9 +79,7 @@ function lib:Create(Data: table)
             end
             if Text then Text.Visible = true end
             Trace.Visible = true
-            print(Color)
             if Color == "random" then
-                print("random loop")
                 local t = 5
                 local hue = tick() % t / t
 	            local rgb = Color3.fromHSV(hue, 1, 1)
