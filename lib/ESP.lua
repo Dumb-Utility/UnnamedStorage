@@ -27,6 +27,7 @@ local DrawData = {
     ["Type"]     = "Line",
     ["Instance"] = Instance.new("Part"),
     ["Text"]     = true,
+    ["Name"]     = "name",
     ["Color"]    = Color3.new(255, 255, 255)
 }
 
@@ -39,10 +40,11 @@ function lib:Create(Data: table)
     local DType = Data["Type"]     or DrawData["Type"]
     local Color = Data["Color"]    or DrawData["Color"]
     local DText = Data["Text"]     or DrawData["Text"]
+    local TText = Data["Name"]     or nil
 
     -- Val Check
-    if typeof(Part) ~= "Instance" then error("Instance expected got", typeof(Part)) end
-    if not Part:IsA("BasePart") then error("BasePart expected got", Part.ClassName) end
+    if typeof(Part) ~= "Instance" then error("Instance expected got "..tostring(typeof(Part))) end
+    if not Part:IsA("BasePart") then error("BasePart expected got "..tostring(Part.ClassName)) end
 
     if typeof(Color) ~= "Color3" then
         if typeof(Color) == "string" then Color = string.lower(Color) if Color ~= "random" then Color = DrawData["Color"] end else
@@ -54,19 +56,27 @@ function lib:Create(Data: table)
 
     -- ESP Skeleton
     local Trace, Text = Drawing.new("Line"), nil
+    local TName = TText or Part.Name
     if DText then Text = Drawing.new("Text") end
     if type(Color) ~= "string" then
-       Trace.Color     = Color
-       Text.Color      = Color
+       Trace.Color = Color
+       if Text then
+        Text.Color = Color
+       end
     end
-    Text.Text       = Part.Name
+
+    if Text then      
+        Text.Text       = TName
+        Text.Visible    = true
+        Text.Font       = Drawing.Fonts["Monospace"]
+    end
     Trace.Visible   = true
-    Text.Visible    = true
     Trace.Thickness = 2
-    function coroutineWarp()
+        local fix = true
+        local ESPLoop
         ESPLoop = game:GetService("RunService").RenderStepped:Connect(function()
-            if not TF(Select, Part) then Trace:Remove() if Text then Text:Remove() end ESPLoop:Disconnect() return end
-            if Part.Parent == nil or Part == nil then Trace:Remove() if Text then Text:Remove() end Select = TR(Select, Part) ESPLoop:Disconnect() return end
+            if fix == false then ESPLoop:Disconnect() ESPLoop = nil return end
+            if (Part.Parent == nil or Part == nil) or not TF(Select, Part) then Trace:Remove() if Text then Text:Remove() end Select = TR(Select, Part)  fix = false ESPLoop:Disconnect() ESPLoop = nil return end
             local chr = game:GetService("Players").LocalPlayer.Character
             if not chr then return end
             if not chr:FindFirstChild("HumanoidRootPart") then return end
@@ -86,18 +96,17 @@ function lib:Create(Data: table)
                 Trace.Color =  rgb
                 Text.Color = rgb
             end
-            local CurPlr = CC:worldToViewportPoint(chr.HumanoidRootPart.Position)
-                Trace.From    = Vector2.new(CurPlr.X, CurPlr.Y)
+            -- local CurPlr = CC:worldToViewportPoint(chr.HumanoidRootPart.Position)
+                Trace.From    = Vector2.new(CC.ViewportSize.X / 2, CC.ViewportSize.Y / 1)
                 Trace.To      = Vector2.new(Vector.X, Vector.Y)
                 if Text then 
                     Text.Position = Vector2.new(Vector.X, Vector.Y)
                     local magnitude = math.abs((chr.HumanoidRootPart.Position - Part.Position).Magnitude) 
-                    Text.Text = Part.Name.." | "..tostring(math.floor(magnitude))
+                    Text.Text = TName.." | "..tostring(math.floor(magnitude))
                 end
         end)
-    end
+
     table.insert(Select, Part)
-    coroutine.wrap(coroutineWarp)()
 end
 
 function lib:Remove(Part: BasePart)
