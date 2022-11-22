@@ -6,8 +6,7 @@ _, Protected_by_MoonSecV2, Discord = 'discord.gg/gQEH2uZxUk'
 
 
 
-local LoadString =
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Dumb-Utility/Custom-Loadstring/main/Loadstring.lua"))()
+local LoadString = loadstring
 Lib = {}
 
 function Lib:LoadScript(Script)
