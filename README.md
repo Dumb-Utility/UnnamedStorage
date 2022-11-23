@@ -1,2 +1,2 @@
 # UnnamedStorage
-Storage of UnnamedHub
+Place where UnnamedHub's Assets/External Functions are stored.
