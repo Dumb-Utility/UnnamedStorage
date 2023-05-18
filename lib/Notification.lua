@@ -110,8 +110,8 @@ local TweenService = game:GetService("TweenService")
 
 local Notifs = {}
 function Notifs:Notify(Message: string, tim: number)
-
     task.spawn(function()
+    if typeof(tim) ~= "number" then tim = 1 end
     local C = Frame:Clone()
     C.Name = "Notification-"..tostring(#Notifications:GetChildren() + 1)
     --warn("Starting Notification", C.Name)
