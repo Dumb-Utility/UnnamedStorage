@@ -2,6 +2,7 @@
 -- Version: 3.2
 
 -- Instances:
+local global = getgenv and getgenv() or _G
 
 local Notifications = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
@@ -14,9 +15,13 @@ local UICorner_2 = Instance.new("UICorner")
 local Timer = Instance.new("Frame")
 
 --Properties:
+if global.UH__NOTIF__Destroy then
+    global.UH__NOTIF__Destroy()
+end
 
-local L = game:GetService("CoreGui"):FindFirstChild("Notifications-UH")
-if L then L:Destroy() end
+global.UH__NOTIF__Destroy = function()
+    Notifications:Destroy()
+end
 
 Notifications.Name = "Notifications-UH"
 local Par = game:GetService("CoreGui")
