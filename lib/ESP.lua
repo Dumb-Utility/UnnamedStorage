@@ -116,6 +116,12 @@ function lib:Remove(Part: BasePart)
         Select = TR(Select, Part)
         print(TF(Select, Part))
     end
+	
+	
+function lib:Clear()
+    for _,v in next, Select do
+	TF(Select, v)
+    end
 end
 
 return lib
